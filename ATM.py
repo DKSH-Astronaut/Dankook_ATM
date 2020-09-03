@@ -538,6 +538,7 @@ class LoginForm(QWidget):
                                                     userTable['Age'].iloc[loginedLine],
                                                     userTable['Money'].iloc[loginedLine],
                                                     userTable['Rate'].iloc[loginedLine])
+            #여기서 usersum은 회원에게 상품을 추천하기 위한 등급이다. 1 = S, 2 = A, 3 = B ... 6 = E
             if round(usersum) <= 1:
                 msg.setText("햇살론")
             elif 1 < round(usersum) <= 2:
