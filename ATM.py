@@ -234,20 +234,20 @@ class LoginForm(QWidget):
         만약 ID 또는 Password를 입력하고 로그인 버튼을 눌렀을 때
             만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 이상이라면
                 만약 userName과 입력한 ID값이 같다면
-                    만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값과 같다면
+                    만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 같다면
                         loginAction을 True로 설정, loginCout를 0으로 설정
-                        loginCache에 key는 입력한 ID값, value는 입력한 PW값 저장
+                        loginCache에 key는 입력한 ID값, value는 입력한 PW값을 해싱한 값 저장
                         '로그인에 성공했습니다.'(이)라고 출력
-                    만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값과 다르면
+                    만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 다르면
                         '로그인에 실패했습니다.'(이)라고 출력
             만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 미만이라면
                 userTable에 index만큼 반복
-                enc_ID(이)라는 변수에 입력한 ID값을 인코딩
-                enc_PW(이)라는 변수에 입력한 PW값을 인코딩
+                enc_ID(이)라는 변수에 입력한 ID값을 암호화
+                enc_PW(이)라는 변수에 입력한 PW값을 해싱
                 만약 enc_ID[0](keyID) enc_ID[1](valueID)로 디코딩한 값이 userTable에 'keyID'(이)라는 열, i번째 행 데이터와 'Name'(이)라는 열, i번째 행 데이터로 디코딩한 값과 같다면
-                    만약 val[0](keyPW) val[1](valuePW)로 디코딩한 값이 userTable에 'keyPW'(이)라는 열, i번째 행 데이터와 'PW'(이)라는 열, i번째 행 데이터로 디코딩한 값과 같다면
+                    만약 enc_PW값이 입력한 PW값을 해싱한 값과 같다면
                         loginAction을 True로 설정, loginLine을 i로 설정과 함께 "로그인에 성공했습니다"(이)라고 출력
-                    만약 val[0](keyPW) val[1](valuePW)로 디코딩한 값이 userTable에 'keyPW'(이)라는 열, i번째 행 데이터와 'PW'(이)라는 열, i번째 행 데이터로 디코딩한 값과 다르면
+                    만약 enc_PW값이 입력한 PW값을 해싱한 값과 다르다면
                         '로그인에 실패했습니다.'(이)라고 출력
     """
 
@@ -350,32 +350,32 @@ class LoginForm(QWidget):
             inputAccNum, dialog = QInputDialog.getText(
                 self, 'Input Dialog', '보낼 사람의 계좌를 입력해주세요. :')
 
+# 내일부터 다시 짜야함
             if inputAccNum in str(userTable['accNum']):
                 transMoney, dialog1 = QInputDialog.getText(
                     self, 'Input Dialog', '얼마를 보내시겠습니까? :')
-                try:
-                    transMoney = int(transMoney)
-                    if transMoney > userTable['Money'].iloc[loginedLine]:
-                        msg.setText("잔액이 부족합니다.")
-                        msg.exec_()
-                    elif transMoney < 100:
-                        msg.setText("이체 가능한 최소 비용은 100원입니다.")
-                        msg.exec_()
-                    else:
-                        for i in range(len(userTable.index)):
-                            if inputAccNum == userTable['accNum'].iloc[i]:
-                                break
-                        userTable['Money'].iloc[loginedLine] = userTable['Money'].iloc[loginedLine] - transMoney
-                        userTable['Money'].iloc[i] = userTable['Money'].iloc[i] + transMoney
-                        with open("DB/trans.log", "a", encoding="UTF8") as file:
-                            file.write(
-                                f"{userTable['accNum'].iloc[loginedLine]}->{inputAccNum}:{str(transMoney)}\n")
-                        msg.setText(
-                            f"{inputAccNum}번호로 {transMoney}원 이체 완료했습니다.")
-                        msg.exec_()
-                except ValueError:
-                    msg.setText("정확한 금액을 입력해주세요")
+                transMoney = int(transMoney)
+                if transMoney > int(Decoding(userTable['Money'].iloc[loginedLine], userTable['keyMoney'].iloc[loginedLine])):
+                    msg.setText("잔액이 부족합니다.")
                     msg.exec_()
+                elif transMoney < 100:
+                    msg.setText("이체 가능한 최소 비용은 100원입니다.")
+                    msg.exec_()
+                else:
+                    for i in range(len(userTable.index)):
+                        if inputAccNum == userTable['accNum'].iloc[i]:
+                            break
+                    userTable['Money'].iloc[loginedLine] = userTable['Money'].iloc[loginedLine] - transMoney
+                    userTable['Money'].iloc[i] = userTable['Money'].iloc[i] + transMoney
+                    with open("DB/trans.log", "a", encoding="UTF8") as file:
+                        file.write(
+                            f"{userTable['accNum'].iloc[loginedLine]}->{inputAccNum}:{str(transMoney)}\n")
+                    msg.setText(
+                        f"{inputAccNum}번호로 {transMoney}원 이체 완료했습니다.")
+                    msg.exec_()
+                # except ValueError:
+                #     msg.setText("정확한 금액을 입력해주세요")
+                #     msg.exec_()
             else:
                 msg.setText("해당 계좌는 존재하지 않습니다.")
                 msg.exec_()
@@ -413,11 +413,11 @@ class LoginForm(QWidget):
                 # 대부분 0.0 ~ 0.001 정도
             else:
                 time.sleep(1)
-                userMoney = userTable['Money'].iloc[loginedLine]
                 msg.setText(
-                    f"{str(userMoney)}원 있습니다.")
+                    f"{Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])}원 있습니다.")
                 print("Count time :", time.time() - start)
-                countCache.put(userName, userMoney)
+                countCache.put(userName, Decoding(
+                    userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine]))
                 msg.exec_()
                 # 대부분 1.0 ~ 1.0009 정도
 
@@ -463,6 +463,7 @@ class LoginForm(QWidget):
     """
 
     def inMoney(self):
+        global userTable, loginedLine
         msg = QMessageBox()
 
         if loginAction == False:
@@ -472,7 +473,10 @@ class LoginForm(QWidget):
             try:
                 inMoney, dialog = QInputDialog.getText(
                     self, 'Input Dialog', '입금할 금액 :')
-                userTable['Money'].iloc[loginedLine] += int(inMoney)
+                userTable['Money'].iloc[loginedLine] = Encoding(str(int(Decoding(
+                    userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) + int(inMoney)))[1]
+                userTable['keyMoney'].iloc[loginedLine] = Encoding(str(int(Decoding(
+                    userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) + int(inMoney)))[0]
                 msg.setText(inMoney + "원을 입금 완료했습니다.")
                 msg.exec_()
             except ValueError:
@@ -538,7 +542,6 @@ class LoginForm(QWidget):
                                                     userTable['Age'].iloc[loginedLine],
                                                     userTable['Money'].iloc[loginedLine],
                                                     userTable['Rate'].iloc[loginedLine])
-            #여기서 usersum은 회원에게 상품을 추천하기 위한 등급이다. 1 = S, 2 = A, 3 = B ... 6 = E
             if round(usersum) <= 1:
                 msg.setText("햇살론")
             elif 1 < round(usersum) <= 2:
