@@ -15,7 +15,7 @@ import module.linear_regression as lin
 ###############################################
 
 loginCache = LRUCache(1)
-countCache = LRUCache(1)
+countCache = LRUCache(2)
 
 prev_user = ""
 userID = []
@@ -448,11 +448,11 @@ class LoginForm(QWidget):
                     msg.exec_()
                 else:
                     # 왜 오류?
-                    userTable['Money'].iloc[loginedLine] = Encoding(str(int(Decoding(
-                        userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) - int(outMoney)))[1]
-                    userTable['keyMoney'].iloc[loginedLine] = Encoding(str(int(Decoding(
-                        userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) - int(outMoney)))[0]
-                    msg.setText(outMoney + "원을 출금 완료했습니다.")
+                    enco = Encoding(str(int(Decoding(
+                        userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) - int(outMoney)))
+                    userTable['Money'].iloc[loginedLine] = enco[1]
+                    userTable['keyMoney'].iloc[loginedLine] = enco[0]
+                    msg.setText(f"{outMoney}원을 입금 완료했습니다.")
                     msg.exec_()
             except ValueError:
                 msg.setText("정확한 금액을 입력해주세요")
@@ -484,10 +484,10 @@ class LoginForm(QWidget):
             try:
                 inMoney, dialog = QInputDialog.getText(
                     self, 'Input Dialog', '입금할 금액 :')
-                userTable['Money'].iloc[loginedLine] = Encoding(str(int(Decoding(
-                    userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) + int(inMoney)))[1]
-                userTable['keyMoney'].iloc[loginedLine] = Encoding(str(int(Decoding(
-                    userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) + int(inMoney)))[0]
+                enco = Encoding(str(int(Decoding(
+                    userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) + int(inMoney)))
+                userTable['Money'].iloc[loginedLine] = enco[1]
+                userTable['keyMoney'].iloc[loginedLine] = enco[0]
                 msg.setText(inMoney + "원을 입금 완료했습니다.")
                 msg.exec_()
             except ValueError:
@@ -555,7 +555,8 @@ class LoginForm(QWidget):
         else:
             usersum = lin.linear_regression_suggest(full_reg_Table, 'Age', 'Money', 'Credit_level', 'Grade',
                                                     userTable['Age'].iloc[loginedLine],
-                                                    int(Decoding(userTable['keyMoney'].iloc[loginedLine],userTable['Money'].iloc[loginedLine])),
+                                                    int(Decoding(
+                                                        userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])),
                                                     userTable['Rate'].iloc[loginedLine])
             if round(usersum) <= 1:
                 msg.setText("햇살론")
