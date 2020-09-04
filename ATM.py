@@ -509,7 +509,11 @@ class LoginForm(QWidget):
             try:
                 loan, dialog = QInputDialog.getText(
                     self, 'Input Dialog', '대출 금액 :')
-                userTable['Money'].iloc[loginedLine] += int(loan)
+                #userTable['Money'].iloc[loginedLine] += int(loan)
+                userTable['Money'].iloc[loginedLine] = Encoding(str(int(Decoding(
+                    userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) + int(loan)))[1]
+                userTable['keyMoney'].iloc[loginedLine] = Encoding(str(int(Decoding(
+                    userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) + int(loan)))[0]
                 msg.setText(loan+"원 대출완료")
                 msg.exec_()
                 msg.setText("당신의 금리: %f" % userTable['Rate'].iloc[loginedLine])
@@ -551,7 +555,7 @@ class LoginForm(QWidget):
         else:
             usersum = lin.linear_regression_suggest(full_reg_Table, 'Age', 'Money', 'Credit_level', 'Grade',
                                                     userTable['Age'].iloc[loginedLine],
-                                                    userTable['Money'].iloc[loginedLine],
+                                                    int(Decoding(userTable['keyMoney'].iloc[loginedLine],userTable['Money'].iloc[loginedLine])),
                                                     userTable['Rate'].iloc[loginedLine])
             if round(usersum) <= 1:
                 msg.setText("햇살론")
