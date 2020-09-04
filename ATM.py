@@ -358,6 +358,8 @@ class LoginForm(QWidget):
                     transMoney = int(transMoney)
                 except:
                     msg.setText("이체할 금액을 정확히 입력해 주세요")
+                    msg.exec_()
+                    print("입력오류")
                     return
                 if transMoney > int(Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])):
                     msg.setText("잔액이 부족합니다.")
