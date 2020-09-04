@@ -354,8 +354,12 @@ class LoginForm(QWidget):
             if inputAccNum in str(userTable['accNum']):
                 transMoney, dialog1 = QInputDialog.getText(
                     self, 'Input Dialog', '얼마를 보내시겠습니까? :')
-                transMoney = int(transMoney)
-                if transMoney > int(Decoding(userTable['Money'].iloc[loginedLine], userTable['keyMoney'].iloc[loginedLine])):
+                try :
+                    transMoney = int(transMoney)
+                except:
+                    msg.setText("이체할 금액을 정확히 입력해 주세요")
+                    return
+                if transMoney > int(Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])):
                     msg.setText("잔액이 부족합니다.")
                     msg.exec_()
                 elif transMoney < 100:
@@ -365,8 +369,8 @@ class LoginForm(QWidget):
                     for i in range(len(userTable.index)):
                         if inputAccNum == userTable['accNum'].iloc[i]:
                             break
-                    userTable['Money'].iloc[loginedLine] = userTable['Money'].iloc[loginedLine] - transMoney
-                    userTable['Money'].iloc[i] = userTable['Money'].iloc[i] + transMoney
+                    userTable['Money'].iloc[loginedLine] = Encoding(str(int(Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) - transMoney))
+                    userTable['Money'].iloc[i] = Encoding(str(int(Decoding(userTable['keyMoney'].iloc[i], userTable['Money'].iloc[i])) + transMoney))
                     with open("DB/trans.log", "a", encoding="UTF8") as file:
                         file.write(
                             f"{userTable['accNum'].iloc[loginedLine]}->{inputAccNum}:{str(transMoney)}\n")
