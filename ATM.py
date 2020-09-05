@@ -28,8 +28,107 @@ loginCount = 0
 loginAction = False   # 로그인을 했는지 안했는지 알려주는 변수, 값이 False이면 로그인을 안했다는 뜻
 loginedLine = -1  # 로그인한 계정이 몇번째 줄에 있는지 알려주는 변수, 값이 -1이면 로그인 안함
 
-# 회원가입 폼
+# 로그인 폼
 
+class LoginForm(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Astro - Login")
+        self.resize(945, 300)
+
+        layout = QGridLayout()
+
+        self.lbl = QLabel(self)
+        self.lbl.resize(945,300)
+        pixmap = QPixmap("img/astro.png")
+        self.lbl.setPixmap(QPixmap(pixmap))
+
+        label_name = QLabel("ID")
+        self.lineEdit_ID = QLineEdit()
+        self.lineEdit_ID.setPlaceholderText("아이디를 입력하세요.")
+        layout.addWidget(label_name, 0, 0)
+        layout.addWidget(self.lineEdit_ID, 0, 1)
+
+        label_password = QLabel("Password")
+        self.lineEdit_password = QLineEdit()
+        self.lineEdit_password.setPlaceholderText("패스워드를 입력하세요.")
+        layout.addWidget(label_password, 1, 0)
+        layout.addWidget(self.lineEdit_password, 1, 1)
+
+        button_signup = QPushButton("로그인")
+        button_signup.clicked.connect(self.login)
+        layout.addWidget(button_signup, 2, 0)
+        layout.setRowMinimumHeight(2, 1)
+
+
+        self.setLayout(layout)
+
+    def login(self):
+        msg = QMessageBox()
+        start = time.time()
+        global prev_user, loginCount, loginAction, loginedLine
+
+        if loginCount >= 5:
+            time.sleep(1)
+
+        if not self.lineEdit_ID.text() or not self.lineEdit_password.text():
+            loginCount += 1
+            msg.setText('ID 또는 PW를 입력해주세요.')
+            msg.exec_()
+        else:
+
+            # Cache Login
+            if loginCache.nodeMap.get(self.lineEdit_ID.text(), [-1, 0])[1] >= 3:
+                if prev_user == self.lineEdit_ID.text():
+                    if loginCache.nodeMap.get(prev_user, [-1, 0])[0] == PWEncoding(self.lineEdit_password.text()):
+                        loginAction = True
+                        loginCount = 0
+                        loginCache.put(self.lineEdit_ID.text(),
+                                       PWEncoding(self.lineEdit_password.text()))
+                        print("Cache Login time :", time.time() - start)
+                        msg.setText('로그인에 성공했습니다.')
+                        msg.exec_()
+                        self.gomain()
+                        self.close()
+                    else:
+                        loginCount += 1
+                        msg.setText('로그인에 실패했습니다.')
+                        msg.exec_()
+
+            # Default Login
+            else:
+                for i in range(len(userTable.index)):
+                    enc_ID = Encoding(self.lineEdit_ID.text())
+                    enc_PW = PWEncoding(self.lineEdit_password.text())
+                    if Decoding(enc_ID[0], enc_ID[1]) == Decoding(userTable['keyID'].iloc[i],
+                                                                  userTable['Name'].iloc[i]):
+                        if enc_PW == userTable['Pw'].iloc[i]:
+                            loginAction = True
+                            loginedLine = i
+                            prev_user = Decoding(
+                                userTable['keyID'].iloc[i], userTable['Name'].iloc[i])
+                            loginCache.put(prev_user, userTable['Pw'].iloc[i])
+                            loginCount = 0
+                            print("Login time :", time.time() - start)
+                            msg.setText('로그인에 성공했습니다.')
+                            msg.exec_()
+                            self.gomain()
+                            self.close()
+                        else:
+                            loginCount += 1
+                            msg.setText('로그인에 실패했습니다.')
+                            msg.exec_()
+                            break
+
+    def gomain(self):
+        msg = QMessageBox()
+        self.main = MainForm()  # 팝업 회원가입 폼
+        self.main.setGeometry(QRect(100, 100, 180, 500))  # 팝업
+        self.main.show()
+
+
+
+    # 회원가입 폼
 
 class SignUpForm(QWidget):
     def __init__(self):
@@ -149,7 +248,7 @@ class SignUpForm(QWidget):
 # 로그인 폼
 
 
-class LoginForm(QWidget):
+class MainForm(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Astro - ATM")
