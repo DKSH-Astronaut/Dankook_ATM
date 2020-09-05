@@ -63,6 +63,34 @@ class LoginForm(QWidget):
 
         self.setLayout(layout)
 
+    """
+        # LRU Cache를 이용한 로그인 시스템
+
+        로직:
+            만약 잘못된 로그인 횟수가 5회 이상일 때
+                1초 딜레이
+            만약 ID 또는 Password를 입력하지 않고 로그인 버튼을 눌렀을 때
+                "ID 또는 PW를 입력해주세요."(이)라고 출력
+            만약 ID 또는 Password를 입력하고 로그인 버튼을 눌렀을 때
+                만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 이상이라면
+                    만약 userName과 입력한 ID값이 같다면
+                        만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 같다면
+                            loginAction을 True로 설정, loginCout를 0으로 설정
+                            loginCache에 key는 입력한 ID값, value는 입력한 PW값을 해싱한 값 저장
+                            '로그인에 성공했습니다.'(이)라고 출력
+                        만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 다르면
+                            '로그인에 실패했습니다.'(이)라고 출력
+                만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 미만이라면
+                    userTable에 index만큼 반복
+                    enc_ID(이)라는 변수에 입력한 ID값을 암호화
+                    enc_PW(이)라는 변수에 입력한 PW값을 해싱
+                    만약 enc_ID[0](keyID) enc_ID[1](valueID)로 디코딩한 값이 userTable에 'keyID'(이)라는 열, i번째 행 데이터와 'Name'(이)라는 열, i번째 행 데이터로 디코딩한 값과 같다면
+                        만약 enc_PW값이 입력한 PW값을 해싱한 값과 같다면
+                            loginAction을 True로 설정, loginLine을 i로 설정과 함께 "로그인에 성공했습니다"(이)라고 출력
+                        만약 enc_PW값이 입력한 PW값을 해싱한 값과 다르다면
+                            '로그인에 실패했습니다.'(이)라고 출력
+        """
+
     def login(self):
         msg = QMessageBox()
         start = time.time()
@@ -255,21 +283,10 @@ class MainForm(QWidget):
         self.resize(180, 500)
 
         layout = QGridLayout()
-        label_name = QLabel("ID")
-        self.lineEdit_ID = QLineEdit()
-        self.lineEdit_ID.setPlaceholderText("아이디를 입력해주세요.")
-        layout.addWidget(label_name, 0, 0)
-        layout.addWidget(self.lineEdit_ID, 0, 1)
-
-        label_password = QLabel("Password")
-        self.lineEdit_password = QLineEdit()
-        self.lineEdit_password.setPlaceholderText("패스워드를 입력해주세요.")
-        layout.addWidget(label_password, 1, 0)
-        layout.addWidget(self.lineEdit_password, 1, 1)
 
         # 조우식 잡다한버튼
-        button_login = QPushButton("로그인")
-        button_login.clicked.connect(self.check_password)
+        button_login = QPushButton("로그아웃")
+        button_login.clicked.connect(self.logout)
         layout.addWidget(button_login, 2, 0)
         layout.setRowMinimumHeight(2, 40)
 
@@ -323,85 +340,19 @@ class MainForm(QWidget):
 
         self.setLayout(layout)
 
-    """
-    # LRU Cache를 이용한 로그인 시스템
 
-    로직:
-        만약 잘못된 로그인 횟수가 5회 이상일 때
-            1초 딜레이
-        만약 ID 또는 Password를 입력하지 않고 로그인 버튼을 눌렀을 때
-            "ID 또는 PW를 입력해주세요."(이)라고 출력
-        만약 ID 또는 Password를 입력하고 로그인 버튼을 눌렀을 때
-            만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 이상이라면
-                만약 userName과 입력한 ID값이 같다면
-                    만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 같다면
-                        loginAction을 True로 설정, loginCout를 0으로 설정
-                        loginCache에 key는 입력한 ID값, value는 입력한 PW값을 해싱한 값 저장
-                        '로그인에 성공했습니다.'(이)라고 출력
-                    만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 다르면
-                        '로그인에 실패했습니다.'(이)라고 출력
-            만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 미만이라면
-                userTable에 index만큼 반복
-                enc_ID(이)라는 변수에 입력한 ID값을 암호화
-                enc_PW(이)라는 변수에 입력한 PW값을 해싱
-                만약 enc_ID[0](keyID) enc_ID[1](valueID)로 디코딩한 값이 userTable에 'keyID'(이)라는 열, i번째 행 데이터와 'Name'(이)라는 열, i번째 행 데이터로 디코딩한 값과 같다면
-                    만약 enc_PW값이 입력한 PW값을 해싱한 값과 같다면
-                        loginAction을 True로 설정, loginLine을 i로 설정과 함께 "로그인에 성공했습니다"(이)라고 출력
-                    만약 enc_PW값이 입력한 PW값을 해싱한 값과 다르다면
-                        '로그인에 실패했습니다.'(이)라고 출력
-    """
-
-    def check_password(self):
+    # 로그아웃 시스템
+    def logout(self):
+        global loginedLine, loginAction
         msg = QMessageBox()
-        start = time.time()
-        global prev_user, loginCount, loginAction, loginedLine
-
-        if loginCount >= 5:
-            time.sleep(1)
-
-        if not self.lineEdit_ID.text() or not self.lineEdit_password.text():
-            loginCount += 1
-            msg.setText('ID 또는 PW를 입력해주세요.')
-            msg.exec_()
-        else:
-
-            # Cache Login
-            if loginCache.nodeMap.get(self.lineEdit_ID.text(), [-1, 0])[1] >= 3:
-                if prev_user == self.lineEdit_ID.text():
-                    if loginCache.nodeMap.get(prev_user, [-1, 0])[0] == PWEncoding(self.lineEdit_password.text()):
-                        loginAction = True
-                        loginCount = 0
-                        loginCache.put(self.lineEdit_ID.text(),
-                                       PWEncoding(self.lineEdit_password.text()))
-                        print("Cache Login time :", time.time() - start)
-                        msg.setText('로그인에 성공했습니다.')
-                        msg.exec_()
-                    else:
-                        loginCount += 1
-                        msg.setText('로그인에 실패했습니다.')
-                        msg.exec_()
-
-            # Default Login
-            else:
-                for i in range(len(userTable.index)):
-                    enc_ID = Encoding(self.lineEdit_ID.text())
-                    enc_PW = PWEncoding(self.lineEdit_password.text())
-                    if Decoding(enc_ID[0], enc_ID[1]) == Decoding(userTable['keyID'].iloc[i], userTable['Name'].iloc[i]):
-                        if enc_PW == userTable['Pw'].iloc[i]:
-                            loginAction = True
-                            loginedLine = i
-                            prev_user = Decoding(
-                                userTable['keyID'].iloc[i], userTable['Name'].iloc[i])
-                            loginCache.put(prev_user, userTable['Pw'].iloc[i])
-                            loginCount = 0
-                            print("Login time :", time.time() - start)
-                            msg.setText('로그인에 성공했습니다.')
-                            msg.exec_()
-                        else:
-                            loginCount += 1
-                            msg.setText('로그인에 실패했습니다.')
-                            msg.exec_()
-                            break
+        msg.setText("로그아웃되었습니다.")
+        loginAction = False
+        loginedLine = -1
+        self.loginform = LoginForm() #로그인 폼
+        self.loginform.setGeometry(QRect(100, 100, 945, 300))
+        self.loginform.show() #로그인 폼 표시
+        self.close()
+        msg.exec_()
 
     # 회원가입 시스템
     def register(self):
