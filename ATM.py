@@ -144,6 +144,7 @@ class SignUpForm(QWidget):
                 print(userTable)
                 msg.setText('회원가입에 성공했습니다.')
                 msg.exec_()
+                self.close()
 
 # 로그인 폼
 
