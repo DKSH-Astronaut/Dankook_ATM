@@ -90,7 +90,7 @@ class LoginForm(QWidget):
                         만약 enc_PW값이 입력한 PW값을 해싱한 값과 다르다면
                             '로그인에 실패했습니다.'(이)라고 출력
         """
-
+    #로그인 시스
     def login(self):
         msg = QMessageBox()
         start = time.time()
@@ -117,7 +117,7 @@ class LoginForm(QWidget):
                         msg.setText('로그인에 성공했습니다.')
                         msg.exec_()
                         self.gomain()
-                        self.close()
+                        self.close() #로그인 폼 끄기
                     else:
                         loginCount += 1
                         msg.setText('로그인에 실패했습니다.')
@@ -141,13 +141,13 @@ class LoginForm(QWidget):
                             msg.setText('로그인에 성공했습니다.')
                             msg.exec_()
                             self.gomain()
-                            self.close()
+                            self.close() #로그인 폼 끄기
                         else:
                             loginCount += 1
                             msg.setText('로그인에 실패했습니다.')
                             msg.exec_()
                             break
-
+    #메인폼으로 가기 위한 시스템
     def gomain(self):
         msg = QMessageBox()
         self.main = MainForm()  # 팝업 회원가입 폼
@@ -346,12 +346,12 @@ class MainForm(QWidget):
         global loginedLine, loginAction
         msg = QMessageBox()
         msg.setText("로그아웃되었습니다.")
-        loginAction = False
-        loginedLine = -1
+        loginAction = False # 로그인 액션 초기화
+        loginedLine = -1 #로그인라인 초기화
         self.loginform = LoginForm() #로그인 폼
         self.loginform.setGeometry(QRect(100, 100, 945, 300))
         self.loginform.show() #로그인 폼 표시
-        self.close()
+        self.close() #메인폼 끄기
         msg.exec_()
 
     # 회원가입 시스템
