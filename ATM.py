@@ -50,18 +50,18 @@ class LoginForm(QWidget):
         layout2 = QHBoxLayout()
 
         self.lbl_ID = QLabel('ID')
-        self.lbl_ID.setStyleSheet("color: green;"
+        self.lbl_ID.setStyleSheet("color: #000000;"
                                   "border-style: solid;"
                                   "border-width: 2px;"
-                                  "border-color: #000000;"
-                                  "border-radius: 10px")
+                                  "border-color: #AADBDD;"
+                                  "background-color: #AADBDD;")
 
         self.lbl_PW = QLabel('Password')
-        self.lbl_PW.setStyleSheet("color: green;"
+        self.lbl_PW.setStyleSheet("color: #000000;"
                                   "border-style: solid;"
                                   "border-width: 2px;"
-                                  "border-color: #000000;"
-                                  "border-radius: 10px")
+                                  "border-color: #AADBDD;"
+                                  "background-color: #AADBDD;")
 
         layout2.addWidget(lbl_img)
 
