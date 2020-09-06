@@ -27,7 +27,7 @@ loginCount = 0
 loginAction = False   # 로그인을 했는지 안했는지 알려주는 변수, 값이 False이면 로그인을 안했다는 뜻
 loginedLine = -1  # 로그인한 계정이 몇번째 줄에 있는지 알려주는 변수, 값이 -1이면 로그인 안함
 
-userID = [PWEncoding((Decoding(userTable['keyID'].iloc[i], userTable['Name'].iloc[i])))
+userID = [PWEncoding(Decoding(userTable['keyID'].iloc[i], userTable['Name'].iloc[i]))
           for i in range(len(userTable.index))]
 
 # 로그인 폼
@@ -188,17 +188,18 @@ class LoginForm(QWidget):
                                                         userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])),
                                                     userTable['Rate'].iloc[loginedLine])
             if round(usersum) <= 1:
-                msg.setText("햇살론")
+                res = "햇살론"
             elif 1 < round(usersum) <= 2:
-                msg.setText("금리 4% 인생핀다론")
+                res = "금리 4% 인생핀다론"
             elif 2 < round(usersum) <= 3:
-                msg.setText("우리자유적금")
+                res = "우리자유적금"
             elif 3 < round(usersum) <= 4:
-                msg.setText("우리적금")
+                res = "우리적금"
             elif 4 < round(usersum) <= 5:
-                msg.setText("우리큐브")
+                res = "우리큐브"
             elif 5 < round(usersum):
-                msg.setText("두루두루정기예금")
+                res = "두루두루정기예금"
+            msg.setText(res + "(은)는 어떠신가요?")
             msg.exec_()
 
     def register(self):
@@ -646,4 +647,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     form = LoginForm()
     form.show()
-    sys.exit(app.exec_()
+    sys.exit(app.exec_())
