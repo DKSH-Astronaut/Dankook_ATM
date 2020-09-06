@@ -60,6 +60,12 @@ class LoginForm(QWidget):
         layout.addWidget(button_signup, 2, 0)
         layout.setRowMinimumHeight(2, 1)
 
+        button_register = QPushButton("회원가입")
+        button_register.setMaximumWidth(80)
+        button_register.clicked.connect(self.register)
+        layout.addWidget(button_register, 2, 1)
+        layout.setRowMinimumHeight(2, 2)
+
 
         self.setLayout(layout)
 
@@ -141,6 +147,7 @@ class LoginForm(QWidget):
                             msg.setText('로그인에 성공했습니다.')
                             msg.exec_()
                             self.gomain()
+                            self.suggest()
                             self.close() #로그인 폼 끄기
                         else:
                             loginCount += 1
@@ -153,6 +160,37 @@ class LoginForm(QWidget):
         self.main = MainForm()  # 팝업 회원가입 폼
         self.main.setGeometry(QRect(100, 100, 180, 500))  # 팝업
         self.main.show()
+
+    def suggest(self):
+        msg = QMessageBox()
+        if loginAction == False:
+            msg.setText("로그인이 필요합니다.")
+            msg.exec_()
+        else:
+            usersum = lin.linear_regression_suggest(full_reg_Table, 'Age', 'Money', 'Credit_level', 'Grade',
+                                                    userTable['Age'].iloc[loginedLine],
+                                                    int(Decoding(
+                                                        userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])),
+                                                    userTable['Rate'].iloc[loginedLine])
+            if round(usersum) <= 1:
+                msg.setText("햇살론")
+            elif 1 < round(usersum) <= 2:
+                msg.setText("금리 4% 인생핀다론")
+            elif 2 < round(usersum) <= 3:
+                msg.setText("우리자유적금")
+            elif 3 < round(usersum) <= 4:
+                msg.setText("우리적금")
+            elif 4 < round(usersum) <= 5:
+                msg.setText("우리큐브")
+            elif 5 < round(usersum):
+                msg.setText("두루두루정기예금")
+            msg.exec_()
+
+    def register(self):
+        msg = QMessageBox()
+        self.signup = SignUpForm()  # 팝업 회원가입 폼
+        self.signup.setGeometry(QRect(100, 100, 400, 200))  # 팝업
+        self.signup.show()  # 회원가입 폼 표시
 
 
 
@@ -264,7 +302,7 @@ class SignUpForm(QWidget):
                         PW = PWEncoding(self.lineEdit_password.text())
                         money = Encoding("0")
                         userinformation = pd.DataFrame(
-                            [{'Name': ID[1], 'Pw': PW, 'Money': money[1], 'Age': lineEdit_age, 'accNum': newAccli, 'keyID': ID[0], 'keyMoney': money[0]}])
+                            [{'Name': ID[1], 'Pw': PW, 'Money': money[1], 'Age': lineEdit_age, 'Rate': 6, 'accNum': newAccli, 'keyID': ID[0], 'keyMoney': money[0]}])
                         userTable = pd.concat(
                             [userTable, userinformation], ignore_index=True)
                         break
@@ -290,11 +328,11 @@ class MainForm(QWidget):
         layout.addWidget(button_login, 2, 0)
         layout.setRowMinimumHeight(2, 40)
 
-        button_register = QPushButton("회원가입")
-        button_register.setMaximumWidth(80)
-        button_register.clicked.connect(self.register)
-        layout.addWidget(button_register, 2, 1)
-        layout.setRowMinimumHeight(2, 40)
+        # button_register = QPushButton("회원가입")
+        # button_register.setMaximumWidth(80)
+        # button_register.clicked.connect(self.register)
+        # layout.addWidget(button_register, 2, 1)
+        # layout.setRowMinimumHeight(2, 40)
 
         button_in = QPushButton("입금")
         button_in.setMaximumWidth(80)
@@ -330,12 +368,6 @@ class MainForm(QWidget):
         button_creditrating.setMaximumWidth(80)
         button_creditrating.clicked.connect(self.creditrating)
         layout.addWidget(button_creditrating, 5, 1)
-        layout.setRowMinimumHeight(2, 40)
-
-        button_suggest = QPushButton("AD")
-        button_suggest.setMaximumHeight(80)
-        button_suggest.clicked.connect(self.suggest)
-        layout.addWidget(button_suggest, 6, 0)
         layout.setRowMinimumHeight(2, 40)
 
         self.setLayout(layout)
@@ -596,32 +628,6 @@ class MainForm(QWidget):
                     msg.exec_()
             except ValueError:
                 pass
-
-    def suggest(self):
-        msg = QMessageBox()
-
-        if loginAction == False:
-            msg.setText("로그인이 필요합니다.")
-            msg.exec_()
-        else:
-            usersum = lin.linear_regression_suggest(full_reg_Table, 'Age', 'Money', 'Credit_level', 'Grade',
-                                                    userTable['Age'].iloc[loginedLine],
-                                                    int(Decoding(
-                                                        userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])),
-                                                    userTable['Rate'].iloc[loginedLine])
-            if round(usersum) <= 1:
-                msg.setText("햇살론")
-            elif 1 < round(usersum) <= 2:
-                msg.setText("금리 4% 인생핀다론")
-            elif 2 < round(usersum) <= 3:
-                msg.setText("우리자유적금")
-            elif 3 < round(usersum) <= 4:
-                msg.setText("우리적금")
-            elif 4 < round(usersum) <= 5:
-                msg.setText("우리큐브")
-            elif 5 < round(usersum):
-                msg.setText("두루두루정기예금")
-            msg.exec_()
 
 
 if __name__ == '__main__':
