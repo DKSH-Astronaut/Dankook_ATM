@@ -31,7 +31,7 @@ The response variable is an explanatory variable, and the variables used for exp
 Regression analysis is intended to logically explain the prediction of a response variable by an independent variable or the relationship between an independent variable and a response variable.
 
 A regression model with one response variable and a linear regression function is called simple linear regression.
-
+We used ATMs to determine users' credit ratings and to recommend a banking system suitable for them.
 
 <h2><b>4. LRUCache.py</b></h2>
 <h3><b>1. Introduction</b></h3>
