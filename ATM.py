@@ -10,8 +10,7 @@ import random
 import time
 
 from module.LRUCache import *
-from module.astro_base64 import uniqueEncode
-from module.astro_secret import Encoding, Decoding, PWEncoding
+from module.astro_secret import *
 import module.linear_regression as lin
 ###############################################
 
@@ -79,6 +78,7 @@ class LoginForm(QWidget):
         self.lineEdit_password.setPlaceholderText("패스워드를 입력하세요.")
         self.lineEdit_password.setMaximumWidth(120)
         layout.addWidget(self.lbl_PW, 1, 2)
+        self.lineEdit_password.setEchoMode(QLineEdit.Password)
         #layout.addWidget(label_password, 0, 2)
         layout.addWidget(self.lineEdit_password, 1, 3)
 
@@ -96,7 +96,6 @@ class LoginForm(QWidget):
         button_register.clicked.connect(self.register)
         layout3.addWidget(button_register)
         #layout3.setRowMinimumHeight(2, 2)
-
 
         layout4 = QVBoxLayout()
         layout4.addLayout(layout2)
@@ -221,7 +220,7 @@ class LoginForm(QWidget):
                 res = "우리큐브"
             elif 5 < round(usersum):
                 res = "두루두루정기예금"
-            msg.setText(res + "(은)는 어떠신가요?")
+            msg.setText(self.lineEdit_ID.text() + "님, " + res + " 상품은 어떠신가요?")
             msg.exec_()
 
     def register(self):
@@ -414,7 +413,7 @@ class MainForm(QWidget):
         loginAction = False  # 로그인 액션 초기화
         loginedLine = -1  # 로그인라인 초기화
         self.loginform = LoginForm()  # 로그인 폼
-        self.loginform.setGeometry(QRect(100, 100, 945, 300))
+        self.loginform.setGeometry(QRect(100, 100, 500, 600))
         self.loginform.show()  # 로그인 폼 표시
         self.close()  # 메인폼 끄기
         msg.exec_()
@@ -536,14 +535,12 @@ class MainForm(QWidget):
                     f"{str(countCache.get(userName))}원 있습니다.")
                 print("Cache Count time :", time.time() - start)
                 msg.exec_()
-                # 대부분 0.0 ~ 0.001 정도
             else:
                 time.sleep(1)
                 msg.setText(
                     f"{Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])}원 있습니다.")
                 print("Count time :", time.time() - start)
                 msg.exec_()
-                # 대부분 1.0 ~ 1.0009 정도
 
     """
     # 출금 시스템
@@ -565,12 +562,11 @@ class MainForm(QWidget):
                     msg.setText("잔액이 부족합니다.")
                     msg.exec_()
                 else:
-                    # 왜 오류?
                     enco = Encoding(str(int(Decoding(
                         userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) - int(outMoney)))
                     userTable['Money'].iloc[loginedLine] = enco[1]
                     userTable['keyMoney'].iloc[loginedLine] = enco[0]
-                    msg.setText(f"{outMoney}원을 입금 완료했습니다.")
+                    msg.setText(f"{outMoney}원을 출금 완료했습니다.")
                     msg.exec_()
             except ValueError:
                 msg.setText("정확한 금액을 입력해주세요")
@@ -653,7 +649,7 @@ class MainForm(QWidget):
             msg.exec_()
         else:
             try:
-                if lin.linear_regression(userTable, 'Age', 'Money', userTable['Age'].iloc[loginedLine], Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) == 1:
+                if lin.linear_regression(userTable, 'Age', 'Money', userTable['Age'].iloc[loginedLine], int(Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine]))) == 1:
                     userTable['Rate'].iloc[loginedLine] = 2.8
                     msg.setText("당신의 신용등급은 높습니다.")
                     msg.exec_()

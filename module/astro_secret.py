@@ -53,6 +53,13 @@ def PWEncoding(value):
     sha.update(value)
     return sha.hexdigest()
 
+
+def uniqueEncode(sender, recipient, key, value):
+    tmp = '{"sender":'+sender+'"recipient":' + \
+        recipient+'"key":' + key+'"value":'+value+'}'
+    res = base64.EncodeBase64(tmp).split('=')
+    return res[0]
+
 # 참고링크 : http://bitly.kr/jkQeVklmmsU
 # created by sheenjiwon
 # assist by Song Kitae

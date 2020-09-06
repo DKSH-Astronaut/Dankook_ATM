@@ -98,13 +98,6 @@ def DecodeBase64(a):  # decode main 함수
     return res
 
 
-def uniqueEncode(sender, recipient, key, value):
-    tmp = '{"sender":'+sender+'"recipient":' + \
-        recipient+'"key":' + key+'"value":'+value+'}'
-    res = EncodeBase64(tmp).split('=')
-    return res[0]
-
-
 # 암호화 : EncodeBase64(argument)
 # 복호화 : DecodeBase64(argument)
 # created by sheenjiwon
