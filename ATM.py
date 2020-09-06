@@ -37,9 +37,18 @@ class LoginForm(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Astro - Login")
-        self.resize(300, 300)
+        self.resize(500, 600)
+
+        pixmap = QPixmap('img/logo.png')
+
+        lbl_img = QLabel()
+        lbl_img.setPixmap(pixmap)
+        #lbl_img = pixmap.scaled(300,300)
+        lbl_img.setMaximumWidth(300)
+        lbl_img.setMaximumHeight(300)
 
         layout = QGridLayout()
+        layout2 = QHBoxLayout()
 
         self.lbl_ID = QLabel('ID')
         self.lbl_ID.setStyleSheet("color: green;"
@@ -55,32 +64,45 @@ class LoginForm(QWidget):
                                   "border-color: #000000;"
                                   "border-radius: 10px")
 
-        label_name = QLabel("")
+        layout2.addWidget(lbl_img)
+
+        #label_name = QLabel("")
         self.lineEdit_ID = QLineEdit()
         self.lineEdit_ID.setPlaceholderText("아이디를 입력하세요.")
-        layout.addWidget(self.lbl_ID)
-        layout.addWidget(label_name, 0, 0)
-        layout.addWidget(self.lineEdit_ID, 0, 1)
+        self.lineEdit_ID.setMaximumWidth(120)
+        layout.addWidget(self.lbl_ID, 1, 0)
+        #layout.addWidget(label_name, 0, 0)
+        layout.addWidget(self.lineEdit_ID, 1, 1)
 
-        label_password = QLabel("")
+        #label_password = QLabel("")
         self.lineEdit_password = QLineEdit()
         self.lineEdit_password.setPlaceholderText("패스워드를 입력하세요.")
-        layout.addWidget(self.lbl_PW)
-        layout.addWidget(label_password, 1, 0)
-        layout.addWidget(self.lineEdit_password, 1, 1)
+        self.lineEdit_password.setMaximumWidth(120)
+        layout.addWidget(self.lbl_PW, 1, 2)
+        #layout.addWidget(label_password, 0, 2)
+        layout.addWidget(self.lineEdit_password, 1, 3)
 
+        layout3 = QHBoxLayout()
         button_signup = QPushButton("로그인")
+        button_signup.setMaximumWidth(120)
+        button_signup.setMaximumHeight(80)
         button_signup.clicked.connect(self.login)
-        layout.addWidget(button_signup, 2, 0)
-        layout.setRowMinimumHeight(2, 1)
+        layout3.addWidget(button_signup)
+        #layout3.setRowMinimumHeight(2, 1)
 
         button_register = QPushButton("회원가입")
-        button_register.setMaximumWidth(80)
+        button_register.setMaximumWidth(120)
+        button_register.setMaximumHeight(80)
         button_register.clicked.connect(self.register)
-        layout.addWidget(button_register, 2, 1)
-        layout.setRowMinimumHeight(2, 2)
+        layout3.addWidget(button_register)
+        #layout3.setRowMinimumHeight(2, 2)
 
-        self.setLayout(layout)
+
+        layout4 = QVBoxLayout()
+        layout4.addLayout(layout2)
+        layout4.addLayout(layout)
+        layout4.addLayout(layout3)
+        self.setLayout(layout4)
 
     """
     # LRU Cache를 이용한 로그인 시스템
