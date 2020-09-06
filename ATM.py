@@ -359,50 +359,60 @@ class MainForm(QWidget):
         self.resize(180, 500)
 
         layout = QGridLayout()
+        toplayout = QHBoxLayout()
 
         # 조우식 잡다한버튼
         button_login = QPushButton("로그아웃")
         button_login.clicked.connect(self.logout)
-        layout.addWidget(button_login, 2, 0)
+        layout.addWidget(button_login, 3, 1)
         layout.setRowMinimumHeight(2, 40)
 
         button_in = QPushButton("입금")
         button_in.setMaximumWidth(80)
         button_in.clicked.connect(self.inMoney)
-        layout.addWidget(button_in, 3, 0)
+        layout.addWidget(button_in, 1, 0)
         layout.setRowMinimumHeight(2, 40)
 
         button_out = QPushButton("출금")
         button_out.setMaximumWidth(80)
         button_out.clicked.connect(self.outMoney)
-        layout.addWidget(button_out, 3, 1)
+        layout.addWidget(button_out, 1, 1)
         layout.setRowMinimumHeight(2, 40)
 
         button_borrow = QPushButton("대출")
         button_borrow.setMaximumWidth(80)
         button_borrow.clicked.connect(self.loanMoney)
-        layout.addWidget(button_borrow, 4, 0)
+        layout.addWidget(button_borrow, 3, 0)
         layout.setRowMinimumHeight(2, 40)
 
         button_trans = QPushButton("이체")
-        button_trans.setMaximumWidth(80)
+        button_trans.setMaximumWidth(100)
+        button_trans.setMaximumHeight(100)
+        button_trans.setStyleSheet("background-color : #AADBDD;"
+                                   "border-radius: 50%;"
+                                   "width: 100px;"
+                                   "height: 100px;")
         button_trans.clicked.connect(self.trans)
-        layout.addWidget(button_trans, 4, 1)
-        layout.setRowMinimumHeight(2, 40)
+        toplayout.addWidget(button_trans)
+        #layout.setRowMinimumHeight(2, 40)
 
         button_count = QPushButton("잔액조회")
         button_count.setMaximumWidth(80)
         button_count.clicked.connect(self.count)
-        layout.addWidget(button_count, 5, 0)
+        layout.addWidget(button_count, 2, 0)
         layout.setRowMinimumHeight(2, 40)
 
         button_creditrating = QPushButton("신용 조회")
         button_creditrating.setMaximumWidth(80)
         button_creditrating.clicked.connect(self.creditrating)
-        layout.addWidget(button_creditrating, 5, 1)
+        layout.addWidget(button_creditrating, 2, 1)
         layout.setRowMinimumHeight(2, 40)
 
-        self.setLayout(layout)
+        mainlayout = QVBoxLayout()
+        mainlayout.addLayout(toplayout)
+        mainlayout.addLayout(layout)
+
+        self.setLayout(mainlayout)
 
     # 로그아웃 시스템
 
