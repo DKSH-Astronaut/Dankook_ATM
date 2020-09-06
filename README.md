@@ -22,6 +22,11 @@ To create these features, we implemented encryption, simple linear regression, a
 ## 1. astro_base64.py
 ## 2. astro_secret.py
 ## 3. linear_regression.py
+<h3><b>1. Introduction</b></h3>
+Regression is a data analysis method in which the dependent variable Y is represented by the different variables X1,.., and Xp.
+The response variable is an explanatory variable, and the variables used for explanation are called independent variables.
+Regression analysis is intended to logically explain the prediction of a response variable by an independent variable or the relationship between an independent variable and a response variable.
+
 <h2><b>4. LRUCache.py</b></h2>
 <h3><b>1. Introduction</b></h3>
 Cache memory is a high-speed semiconductor memory that is installed between CPU and main memory.
