@@ -17,6 +17,9 @@ We are working on this project to develop ATM to learn the same functions as cac
 The ATM has created functions such as register, login, deposit, withdrawal, loan, transfer, balance inquiry, credit inquiry, customized recommendation system, etc.
 To create these features, we implemented encryption, simple linear regression, and LRU cache memory to create more complete ATM.
 
+A regression model with one response variable and a linear regression function is called simple linear regression.
+We used ATMs to determine users' credit ratings and to recommend a banking system suitable for them.
+
 # 2. Modules
 
 ## 1. astro_base64.py
@@ -26,6 +29,9 @@ To create these features, we implemented encryption, simple linear regression, a
 Regression is a data analysis method in which the dependent variable Y is represented by the different variables X1,.., and Xp.
 The response variable is an explanatory variable, and the variables used for explanation are called independent variables.
 Regression analysis is intended to logically explain the prediction of a response variable by an independent variable or the relationship between an independent variable and a response variable.
+
+A regression model with one response variable and a linear regression function is called simple linear regression.
+
 
 <h2><b>4. LRUCache.py</b></h2>
 <h3><b>1. Introduction</b></h3>
