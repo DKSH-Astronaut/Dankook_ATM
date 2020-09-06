@@ -42,7 +42,7 @@ class LoginForm(QWidget):
 
         lbl_img = QLabel()
         lbl_img.setPixmap(pixmap)
-        #lbl_img = pixmap.scaled(300,300)
+        # lbl_img = pixmap.scaled(300,300)
         lbl_img.setMaximumWidth(300)
         lbl_img.setMaximumHeight(300)
 
@@ -65,21 +65,21 @@ class LoginForm(QWidget):
 
         layout2.addWidget(lbl_img)
 
-        #label_name = QLabel("")
+        # label_name = QLabel("")
         self.lineEdit_ID = QLineEdit()
         self.lineEdit_ID.setPlaceholderText("아이디를 입력하세요.")
         self.lineEdit_ID.setMaximumWidth(120)
         layout.addWidget(self.lbl_ID, 1, 0)
-        #layout.addWidget(label_name, 0, 0)
+        # layout.addWidget(label_name, 0, 0)
         layout.addWidget(self.lineEdit_ID, 1, 1)
 
-        #label_password = QLabel("")
+        # label_password = QLabel("")
         self.lineEdit_password = QLineEdit()
         self.lineEdit_password.setPlaceholderText("패스워드를 입력하세요.")
         self.lineEdit_password.setMaximumWidth(120)
         layout.addWidget(self.lbl_PW, 1, 2)
         self.lineEdit_password.setEchoMode(QLineEdit.Password)
-        #layout.addWidget(label_password, 0, 2)
+        # layout.addWidget(label_password, 0, 2)
         layout.addWidget(self.lineEdit_password, 1, 3)
 
         layout3 = QHBoxLayout()
@@ -88,14 +88,14 @@ class LoginForm(QWidget):
         button_signup.setMaximumHeight(80)
         button_signup.clicked.connect(self.login)
         layout3.addWidget(button_signup)
-        #layout3.setRowMinimumHeight(2, 1)
+        # layout3.setRowMinimumHeight(2, 1)
 
         button_register = QPushButton("회원가입")
         button_register.setMaximumWidth(120)
         button_register.setMaximumHeight(80)
         button_register.clicked.connect(self.register)
         layout3.addWidget(button_register)
-        #layout3.setRowMinimumHeight(2, 2)
+        # layout3.setRowMinimumHeight(2, 2)
 
         layout4 = QVBoxLayout()
         layout4.addLayout(layout2)
@@ -329,22 +329,17 @@ class SignUpForm(QWidget):
                     msg.exec_()
                     return
                 newAccli = ""
-                while True:
-                    for i in range(19):
-                        if i == 4 or i == 9 or i == 14:
-                            newAccli += "-"
-                        else:
-                            newAccli += str(random.randrange(1, 10))
-                    if newAccli not in str(userTable['accNum']):
-                        ID = Encoding(self.lineEdit_ID.text())
-                        PW = PWEncoding(self.lineEdit_password.text())
-                        money = Encoding("0")
-                        userinformation = pd.DataFrame(
-                            [{'Name': ID[1], 'Pw': PW, 'Money': money[1], 'Age': lineEdit_age, 'Rate': 6, 'accNum': newAccli, 'keyID': ID[0], 'keyMoney': money[0]}])
-                        userTable = pd.concat(
-                            [userTable, userinformation], ignore_index=True)
-                        break
-                print(userTable)
+                for i in range(3):
+                    newAccli += str(random.randint(1000, 9999)) + "-"
+                newAccli += str(random.randint(1000, 9999))
+                if newAccli not in str(userTable['accNum']):
+                    ID = Encoding(self.lineEdit_ID.text())
+                    PW = PWEncoding(self.lineEdit_password.text())
+                    money = Encoding("0")
+                    userinformation = pd.DataFrame(
+                        [{'Name': ID[1], 'Pw': PW, 'Money': money[1], 'Age': lineEdit_age, 'Rate': 6, 'accNum': newAccli, 'keyID': ID[0], 'keyMoney': money[0]}])
+                    userTable = pd.concat(
+                        [userTable, userinformation], ignore_index=True)
                 msg.setText('회원가입에 성공했습니다.')
                 msg.exec_()
                 self.close()
@@ -353,7 +348,7 @@ class SignUpForm(QWidget):
 
 
 class MainForm(QWidget):
-    def __init__(self):
+
         super().__init__()
         self.setWindowTitle("Astro - ATM")
         self.resize(180, 500)
@@ -394,7 +389,7 @@ class MainForm(QWidget):
                                    "height: 100px;")
         button_trans.clicked.connect(self.trans)
         toplayout.addWidget(button_trans)
-        #layout.setRowMinimumHeight(2, 40)
+        # layout.setRowMinimumHeight(2, 40)
 
         button_count = QPushButton("잔액조회")
         button_count.setMaximumWidth(80)
@@ -427,13 +422,6 @@ class MainForm(QWidget):
         self.loginform.show()  # 로그인 폼 표시
         self.close()  # 메인폼 끄기
         msg.exec_()
-
-    # 회원가입 시스템
-    def register(self):
-        msg = QMessageBox()
-        self.signup = SignUpForm()  # 팝업 회원가입 폼
-        self.signup.setGeometry(QRect(100, 100, 400, 200))  # 팝업
-        self.signup.show()  # 회원가입 폼 표시
 
     """
     # 이체 시스템
