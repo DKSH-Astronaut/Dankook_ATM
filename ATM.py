@@ -19,8 +19,6 @@ loginCache = LRUCache(1)
 countCache = LRUCache(2)
 
 prev_user = ""
-userID = []
-userDB = {}
 
 userTable = pd.read_csv('DB/userTable.csv')
 full_reg_Table = pd.read_csv('DB/full_reg_table.csv')
@@ -29,6 +27,9 @@ loginCount = 0
 loginAction = False   # 로그인을 했는지 안했는지 알려주는 변수, 값이 False이면 로그인을 안했다는 뜻
 loginedLine = -1  # 로그인한 계정이 몇번째 줄에 있는지 알려주는 변수, 값이 -1이면 로그인 안함
 
+userID = [(userTable['Name'].iloc[i], userTable['keyID'].iloc[i])
+          for i in range(len(userTable.index))]
+
 # 로그인 폼
 
 
@@ -36,24 +37,35 @@ class LoginForm(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Astro - Login")
-        self.resize(945, 300)
+        self.resize(300, 300)
 
         layout = QGridLayout()
 
-        self.lbl = QLabel(self)
-        self.lbl.resize(945, 300)
-        pixmap = QPixmap("img/astro.png")
-        self.lbl.setPixmap(QPixmap(pixmap))
+        self.lbl_ID = QLabel('ID')
+        self.lbl_ID.setStyleSheet("color: green;"
+                                  "border-style: solid;"
+                                  "border-width: 2px;"
+                                  "border-color: #000000;"
+                                  "border-radius: 10px")
 
-        label_name = QLabel("ID")
+        self.lbl_PW = QLabel('Password')
+        self.lbl_PW.setStyleSheet("color: green;"
+                                  "border-style: solid;"
+                                  "border-width: 2px;"
+                                  "border-color: #000000;"
+                                  "border-radius: 10px")
+
+        label_name = QLabel("")
         self.lineEdit_ID = QLineEdit()
         self.lineEdit_ID.setPlaceholderText("아이디를 입력하세요.")
+        layout.addWidget(self.lbl_ID)
         layout.addWidget(label_name, 0, 0)
         layout.addWidget(self.lineEdit_ID, 0, 1)
 
-        label_password = QLabel("Password")
+        label_password = QLabel("")
         self.lineEdit_password = QLineEdit()
         self.lineEdit_password.setPlaceholderText("패스워드를 입력하세요.")
+        layout.addWidget(self.lbl_PW)
         layout.addWidget(label_password, 1, 0)
         layout.addWidget(self.lineEdit_password, 1, 1)
 
@@ -199,6 +211,7 @@ class LoginForm(QWidget):
 
 
 class SignUpForm(QWidget):
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Astro - SignUp")
@@ -277,15 +290,16 @@ class SignUpForm(QWidget):
             msg.setText('정보를 모두 입력해주세요')
             msg.exec_()
         else:
-            if self.lineEdit_ID.text() in str(userTable['Name']):
-                msg.setText('이미 있는 아이디입니다.')
-                msg.exec_()
-                return
+            for i in range(len(userID)):
+                if self.lineEdit_ID.text() in Decoding(userID[i][1], userID[i][0]):
+                    msg.setText('이미 있는 아이디입니다.')
+                    msg.exec_()
+                    return
             if self.lineEdit_password.text() != self.lineEdit_password_check.text():
                 msg.setText('두 비밀번호가 일치하지 않습니다.')
                 msg.exec_()
                 return
-            elif self.lineEdit_ID.text() not in userID:
+            elif self.lineEdit_ID.text() not in Decoding(userID[i][1], userID[i][0]):
                 try:
                     lineEdit_age = int(self.lineEdit_age.text())
                 except:
