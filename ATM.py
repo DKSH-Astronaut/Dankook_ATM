@@ -10,6 +10,7 @@ import random
 import time
 
 from module.LRUCache import *
+from module.astro_base64 import uniqueEncode
 from module.astro_secret import Encoding, Decoding, PWEncoding
 import module.linear_regression as lin
 ###############################################
@@ -30,6 +31,7 @@ loginedLine = -1  # 로그인한 계정이 몇번째 줄에 있는지 알려주�
 
 # 로그인 폼
 
+
 class LoginForm(QWidget):
     def __init__(self):
         super().__init__()
@@ -39,7 +41,7 @@ class LoginForm(QWidget):
         layout = QGridLayout()
 
         self.lbl = QLabel(self)
-        self.lbl.resize(945,300)
+        self.lbl.resize(945, 300)
         pixmap = QPixmap("img/astro.png")
         self.lbl.setPixmap(QPixmap(pixmap))
 
@@ -66,37 +68,36 @@ class LoginForm(QWidget):
         layout.addWidget(button_register, 2, 1)
         layout.setRowMinimumHeight(2, 2)
 
-
         self.setLayout(layout)
 
     """
-        # LRU Cache를 이용한 로그인 시스템
+    # LRU Cache를 이용한 로그인 시스템
 
-        로직:
-            만약 잘못된 로그인 횟수가 5회 이상일 때
-                1초 딜레이
-            만약 ID 또는 Password를 입력하지 않고 로그인 버튼을 눌렀을 때
-                "ID 또는 PW를 입력해주세요."(이)라고 출력
-            만약 ID 또는 Password를 입력하고 로그인 버튼을 눌렀을 때
-                만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 이상이라면
-                    만약 userName과 입력한 ID값이 같다면
-                        만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 같다면
-                            loginAction을 True로 설정, loginCout를 0으로 설정
-                            loginCache에 key는 입력한 ID값, value는 입력한 PW값을 해싱한 값 저장
-                            '로그인에 성공했습니다.'(이)라고 출력
-                        만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 다르면
-                            '로그인에 실패했습니다.'(이)라고 출력
-                만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 미만이라면
-                    userTable에 index만큼 반복
-                    enc_ID(이)라는 변수에 입력한 ID값을 암호화
-                    enc_PW(이)라는 변수에 입력한 PW값을 해싱
-                    만약 enc_ID[0](keyID) enc_ID[1](valueID)로 디코딩한 값이 userTable에 'keyID'(이)라는 열, i번째 행 데이터와 'Name'(이)라는 열, i번째 행 데이터로 디코딩한 값과 같다면
-                        만약 enc_PW값이 입력한 PW값을 해싱한 값과 같다면
-                            loginAction을 True로 설정, loginLine을 i로 설정과 함께 "로그인에 성공했습니다"(이)라고 출력
-                        만약 enc_PW값이 입력한 PW값을 해싱한 값과 다르다면
-                            '로그인에 실패했습니다.'(이)라고 출력
-        """
-    #로그인 시스
+    로직:
+        만약 잘못된 로그인 횟수가 5회 이상일 때
+            1초 딜레이
+        만약 ID 또는 Password를 입력하지 않고 로그인 버튼을 눌렀을 때
+            "ID 또는 PW를 입력해주세요."(이)라고 출력
+        만약 ID 또는 Password를 입력하고 로그인 버튼을 눌렀을 때
+            만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 이상이라면
+                만약 userName과 입력한 ID값이 같다면
+                    만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 같다면
+                        loginAction을 True로 설정, loginCout를 0으로 설정
+                        loginCache에 key는 입력한 ID값, value는 입력한 PW값을 해싱한 값 저장
+                        '로그인에 성공했습니다.'(이)라고 출력
+                    만약 loginCache.nodeMap에 userName이라는 key에 value값이 입력한 PW값을 해싱한 값과 다르면
+                        '로그인에 실패했습니다.'(이)라고 출력
+            만약 loginCache.nodeMap에 입력한 ID값이라는 캐시에 카운트가 3 미만이라면
+                userTable에 index만큼 반복
+                enc_ID(이)라는 변수에 입력한 ID값을 암호화
+                enc_PW(이)라는 변수에 입력한 PW값을 해싱
+                만약 enc_ID[0](keyID) enc_ID[1](valueID)로 디코딩한 값이 userTable에 'keyID'(이)라는 열, i번째 행 데이터와 'Name'(이)라는 열, i번째 행 데이터로 디코딩한 값과 같다면
+                    만약 enc_PW값이 입력한 PW값을 해싱한 값과 같다면
+                        loginAction을 True로 설정, loginLine을 i로 설정과 함께 "로그인에 성공했습니다"(이)라고 출력
+                    만약 enc_PW값이 입력한 PW값을 해싱한 값과 다르다면
+                        '로그인에 실패했습니다.'(이)라고 출력
+    """
+
     def login(self):
         msg = QMessageBox()
         start = time.time()
@@ -123,7 +124,7 @@ class LoginForm(QWidget):
                         msg.setText('로그인에 성공했습니다.')
                         msg.exec_()
                         self.gomain()
-                        self.close() #로그인 폼 끄기
+                        self.close()  # 로그인 폼 끄기
                     else:
                         loginCount += 1
                         msg.setText('로그인에 실패했습니다.')
@@ -148,13 +149,15 @@ class LoginForm(QWidget):
                             msg.exec_()
                             self.gomain()
                             self.suggest()
-                            self.close() #로그인 폼 끄기
+                            self.close()  # 로그인 폼 끄기
                         else:
                             loginCount += 1
                             msg.setText('로그인에 실패했습니다.')
                             msg.exec_()
                             break
-    #메인폼으로 가기 위한 시스템
+
+    # 메인폼으로 가기 위한 시스템
+
     def gomain(self):
         msg = QMessageBox()
         self.main = MainForm()  # 팝업 회원가입 폼
@@ -192,9 +195,8 @@ class LoginForm(QWidget):
         self.signup.setGeometry(QRect(100, 100, 400, 200))  # 팝업
         self.signup.show()  # 회원가입 폼 표시
 
-
-
     # 회원가입 폼
+
 
 class SignUpForm(QWidget):
     def __init__(self):
@@ -328,12 +330,6 @@ class MainForm(QWidget):
         layout.addWidget(button_login, 2, 0)
         layout.setRowMinimumHeight(2, 40)
 
-        # button_register = QPushButton("회원가입")
-        # button_register.setMaximumWidth(80)
-        # button_register.clicked.connect(self.register)
-        # layout.addWidget(button_register, 2, 1)
-        # layout.setRowMinimumHeight(2, 40)
-
         button_in = QPushButton("입금")
         button_in.setMaximumWidth(80)
         button_in.clicked.connect(self.inMoney)
@@ -372,18 +368,18 @@ class MainForm(QWidget):
 
         self.setLayout(layout)
 
-
     # 로그아웃 시스템
+
     def logout(self):
         global loginedLine, loginAction
         msg = QMessageBox()
         msg.setText("로그아웃되었습니다.")
-        loginAction = False # 로그인 액션 초기화
-        loginedLine = -1 #로그인라인 초기화
-        self.loginform = LoginForm() #로그인 폼
+        loginAction = False  # 로그인 액션 초기화
+        loginedLine = -1  # 로그인라인 초기화
+        self.loginform = LoginForm()  # 로그인 폼
         self.loginform.setGeometry(QRect(100, 100, 945, 300))
-        self.loginform.show() #로그인 폼 표시
-        self.close() #메인폼 끄기
+        self.loginform.show()  # 로그인 폼 표시
+        self.close()  # 메인폼 끄기
         msg.exec_()
 
     # 회원가입 시스템
@@ -461,8 +457,10 @@ class MainForm(QWidget):
                     userTable['keyMoney'].iloc[i] = Encoding(str(int(Decoding(
                         userTable['keyMoney'].iloc[i], userTable['Money'].iloc[i])) + transMoney))[0]
                     with open("DB/trans.log", "a", encoding="UTF8") as file:
-                        file.write(
-                            f"{userTable['accNum'].iloc[loginedLine]}->{inputAccNum}:{Encoding(str(transMoney))}\n")
+                        tmp = Encoding(str(transMoney))
+                        res = uniqueEncode(
+                            userTable['accNum'].iloc[loginedLine], inputAccNum, tmp[0], tmp[1])
+                        file.write(f"{res}\n")
                     msg.setText(
                         f"{inputAccNum}번호로 {transMoney}원 이체 완료했습니다.")
                     msg.exec_()
@@ -592,7 +590,7 @@ class MainForm(QWidget):
             try:
                 loan, dialog = QInputDialog.getText(
                     self, 'Input Dialog', '대출 금액 :')
-                #userTable['Money'].iloc[loginedLine] += int(loan)
+                # userTable['Money'].iloc[loginedLine] += int(loan)
                 userTable['Money'].iloc[loginedLine] = Encoding(str(int(Decoding(
                     userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) + int(loan)))[1]
                 userTable['keyMoney'].iloc[loginedLine] = Encoding(str(int(Decoding(
@@ -618,7 +616,7 @@ class MainForm(QWidget):
             msg.exec_()
         else:
             try:
-                if lin.linear_regression(userTable, 'Age', 'Money', userTable['Age'].iloc[loginedLine], userTable['Money'].iloc[loginedLine]) == 1:
+                if lin.linear_regression(userTable, 'Age', 'Money', userTable['Age'].iloc[loginedLine], Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) == 1:
                     userTable['Rate'].iloc[loginedLine] = 2.8
                     msg.setText("당신의 신용등급은 높습니다.")
                     msg.exec_()
