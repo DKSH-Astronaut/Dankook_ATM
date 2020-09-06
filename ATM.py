@@ -27,7 +27,7 @@ loginCount = 0
 loginAction = False   # 로그인을 했는지 안했는지 알려주는 변수, 값이 False이면 로그인을 안했다는 뜻
 loginedLine = -1  # 로그인한 계정이 몇번째 줄에 있는지 알려주는 변수, 값이 -1이면 로그인 안함
 
-userID = [(userTable['Name'].iloc[i], userTable['keyID'].iloc[i])
+userID = [PWEncoding((Decoding(userTable['keyID'].iloc[i], userTable['Name'].iloc[i])))
           for i in range(len(userTable.index))]
 
 # 로그인 폼
@@ -291,7 +291,7 @@ class SignUpForm(QWidget):
             msg.exec_()
         else:
             for i in range(len(userID)):
-                if self.lineEdit_ID.text() in Decoding(userID[i][1], userID[i][0]):
+                if PWEncoding(self.lineEdit_ID.text()) in userID:
                     msg.setText('이미 있는 아이디입니다.')
                     msg.exec_()
                     return
@@ -646,4 +646,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     form = LoginForm()
     form.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec_()
