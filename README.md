@@ -33,6 +33,13 @@ Regression analysis is intended to logically explain the prediction of a respons
 A regression model with one response variable and a linear regression function is called simple linear regression.
 We used ATMs to determine users' credit ratings and to recommend a banking system suitable for them.
 
+<h3><b>2. How we used</b></h3>
+First, data on the user's age and credit rating are used to determine whether the user's credit rating is high or low.
+Recommendations require the creation of a coordinate plane, whose x-axis becomes old and the y-axis becomes the user's property.
+When the first function straight line is derived from the simple linear regression analysis using the partial differential equation, the slope is the sum of the times of the x,y deviations / X deviation squared, and the Ysection is the Ymean-(Xmean*m).
+Finally, when the user's amount and age are added to the function to make a dot in the coordinate plane, it is calculated that the credit rating is good if it is above the straight line derived, and the credit rating is low if it is below the straight line.
+
+
 <h2><b>4. LRUCache.py</b></h2>
 <h3><b>1. Introduction</b></h3>
 Cache memory is a high-speed semiconductor memory that is installed between CPU and main memory.
