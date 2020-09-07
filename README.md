@@ -64,6 +64,7 @@ It is easy to control according to the procedure below.
         # print("Low level income")
         return 0
 ```
+```
 When I executed the code above,
 
 First, In x_regressor variable, enter dependent variable values, and in y_response variable, enter response variable values.
@@ -77,7 +78,7 @@ Fourth, we derive the slope and the y-section using the partial differential equ
 The slope is Sxy / Sxx, and the y section is y_avg - (x_avg * m).
 
 Finally, when dotting (x_compare, y_compare) the coordinate plane, if above the straight line derived from the regression analysis, returns "high income level" and "low income level" if below the straight line.
-
+```
 
 
 <h2><b>4. LRUCache.py</b></h2>
