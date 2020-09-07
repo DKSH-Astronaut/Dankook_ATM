@@ -39,6 +39,39 @@ Recommendations require the creation of a coordinate plane, whose x-axis becomes
 When the first function straight line is derived from the simple linear regression analysis using the partial differential equation, the slope is the sum of the times of the x,y deviations / X deviation squared, and the Ysection is the Ymean-(Xmean*m).
 Finally, when the user's amount and age are added to the function to make a dot in the coordinate plane, it is calculated that the credit rating is good if it is above the straight line derived, and the credit rating is low if it is below the straight line.
 
+<h3><b>3. Example</b></h3>
+It is easy to control according to the procedure below.
+```Dankook_ATM/module/linear_regression.py
+
+    x_regressor = Read_value[x]
+    y_response = Read_value[y]
+
+    x_avg = np.mean(x_regressor)
+    y_avg = np.mean(y_response)
+
+    Sxx = np.sum((x_regressor-x_avg)**2)
+    Syy = np.sum((y_response-y_avg)**2)
+
+    Sxy = np.sum((x_regressor-x_avg) * (y_response-y_avg))
+
+    m = Sxy/Sxx
+    b = y_avg - x_avg * m
+
+    if y_compare >= x_compare * m + b:
+        # print("당신의 소득 수준은 높습니다.")
+        return 1
+    else:
+        # print("당신의 소득 수준은 낮습니다.")
+        return 0
+```
+When I executed the code above,
+First, In x_regressor variable, enter dependent variable values, and in y_response variable, enter response variable values.
+Second, for the x_avg variable, enter the mean of the x_regressor values, and for the y_avg variable, enter the mean of the y_response values.
+Third, because the sum of the squared deviations is the sum of the squared values after subtracting the mean from the value, the sum of the deviations of the x,y values for Sxy,the sum of the squares of the x deviations for Sxx, and the sum of the squares of the y deviations for Syy.
+Fourth, we derive the slope and the y-section using the partial differential equation.
+The slope is Sxy / Sxx, and the y section is y_avg - (x_avg * m).
+Finally, when dotting (x_compare, y_compare) the coordinate plane, if above the straight line derived from the regression analysis, returns "high income level" and "low income level" if below the straight line.
+
 
 <h2><b>4. LRUCache.py</b></h2>
 <h3><b>1. Introduction</b></h3>
