@@ -64,6 +64,7 @@ It is easy to control according to the procedure below.
         # print("Low level income")
         return 0
 ```
+
 ```
 When I executed the code above,
 
