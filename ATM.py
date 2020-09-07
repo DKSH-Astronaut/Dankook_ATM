@@ -348,6 +348,7 @@ class SignUpForm(QWidget):
 
 
 class MainForm(QWidget):
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Astro - ATM")
@@ -462,45 +463,48 @@ class MainForm(QWidget):
         else:
             inputAccNum, dialog = QInputDialog.getText(
                 self, 'Input Dialog', '보낼 사람의 계좌를 입력해주세요. :')
-
-            if inputAccNum in str(userTable['accNum']):
-                transMoney, dialog1 = QInputDialog.getText(
-                    self, 'Input Dialog', '얼마를 보내시겠습니까? :')
-                try:
-                    transMoney = int(transMoney)
-                except:
-                    msg.setText("이체할 금액을 정확히 입력해 주세요")
-                    msg.exec_()
-                    return
-                if transMoney > int(Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])):
-                    msg.setText("잔액이 부족합니다.")
-                    msg.exec_()
-                elif transMoney < 100:
-                    msg.setText("이체 가능한 최소 비용은 100원입니다.")
-                    msg.exec_()
-                else:
-                    for i in range(len(userTable.index)):
-                        if inputAccNum == userTable['accNum'].iloc[i]:
-                            break
-                    userTable['Money'].iloc[loginedLine] = Encoding(str(int(Decoding(
-                        userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) - transMoney))[1]
-                    userTable['keyMoney'].iloc[loginedLine] = Encoding(str(int(Decoding(
-                        userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) - transMoney))[0]
-                    userTable['Money'].iloc[i] = Encoding(str(int(Decoding(
-                        userTable['keyMoney'].iloc[i], userTable['Money'].iloc[i])) + transMoney))[1]
-                    userTable['keyMoney'].iloc[i] = Encoding(str(int(Decoding(
-                        userTable['keyMoney'].iloc[i], userTable['Money'].iloc[i])) + transMoney))[0]
-                    with open("DB/trans.log", "a", encoding="UTF8") as file:
-                        tmp = Encoding(str(transMoney))
-                        res = uniqueEncode(
-                            userTable['accNum'].iloc[loginedLine], inputAccNum, tmp[0], tmp[1])
-                        file.write(f"{res}\n")
-                    msg.setText(
-                        f"{inputAccNum}번호로 {transMoney}원 이체 완료했습니다.")
-                    msg.exec_()
-            else:
-                msg.setText("해당 계좌는 존재하지 않습니다.")
+            if not inputAccNum:
+                msg.setText("계좌번호를 정확히 입력해 주세요")
                 msg.exec_()
+            else:
+                if inputAccNum in str(userTable['accNum']):
+                    transMoney, dialog1 = QInputDialog.getText(
+                        self, 'Input Dialog', '얼마를 보내시겠습니까? :')
+                    try:
+                        transMoney = int(transMoney)
+                    except:
+                        msg.setText("이체할 금액을 정확히 입력해 주세요")
+                        msg.exec_()
+                        return
+                    if transMoney > int(Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])):
+                        msg.setText("잔액이 부족합니다.")
+                        msg.exec_()
+                    elif transMoney < 100:
+                        msg.setText("이체 가능한 최소 비용은 100원입니다.")
+                        msg.exec_()
+                    else:
+                        for i in range(len(userTable.index)):
+                            if inputAccNum == userTable['accNum'].iloc[i]:
+                                break
+                        userTable['Money'].iloc[loginedLine] = Encoding(str(int(Decoding(
+                            userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) - transMoney))[1]
+                        userTable['keyMoney'].iloc[loginedLine] = Encoding(str(int(Decoding(
+                            userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine])) - transMoney))[0]
+                        userTable['Money'].iloc[i] = Encoding(str(int(Decoding(
+                            userTable['keyMoney'].iloc[i], userTable['Money'].iloc[i])) + transMoney))[1]
+                        userTable['keyMoney'].iloc[i] = Encoding(str(int(Decoding(
+                            userTable['keyMoney'].iloc[i], userTable['Money'].iloc[i])) + transMoney))[0]
+                        with open("DB/trans.log", "a", encoding="UTF8") as file:
+                            tmp = Encoding(str(transMoney))
+                            res = uniqueEncode(
+                                userTable['accNum'].iloc[loginedLine], inputAccNum, tmp[0], tmp[1])
+                            file.write(f"{res}\n")
+                        msg.setText(
+                            f"{inputAccNum}번호로 {transMoney}원 이체 완료했습니다.")
+                        msg.exec_()
+                else:
+                    msg.setText("해당 계좌는 존재하지 않습니다.")
+                    msg.exec_()
 
     """
     # LRU Cache를 이용한 잔액조회 시스템
@@ -646,17 +650,14 @@ class MainForm(QWidget):
             msg.setText("로그인이 필요합니다.")
             msg.exec_()
         else:
-            try:
-                if lin.linear_regression(userTable, 'Age', 'Money', userTable['Age'].iloc[loginedLine], int(Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine]))) == 1:
-                    userTable['Rate'].iloc[loginedLine] = 2.8
-                    msg.setText("당신의 신용등급은 높습니다.")
-                    msg.exec_()
-                else:
-                    userTable['Rate'].iloc[loginedLine] = 4.8
-                    msg.setText("당신의 신용등급은 낮습니다.")
-                    msg.exec_()
-            except ValueError:
-                pass
+            if lin.linear_regression(userTable, 'Age', 'keyMoney', 'Money', userTable['Age'].iloc[loginedLine], int(Decoding(userTable['keyMoney'].iloc[loginedLine], userTable['Money'].iloc[loginedLine]))) == 1:
+                userTable['Rate'].iloc[loginedLine] = 2.8
+                msg.setText("당신의 신용등급은 높습니다.")
+                msg.exec_()
+            else:
+                userTable['Rate'].iloc[loginedLine] = 4.8
+                msg.setText("당신의 신용등급은 낮습니다.")
+                msg.exec_()
 
 
 if __name__ == '__main__':

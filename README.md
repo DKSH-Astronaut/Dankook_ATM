@@ -24,7 +24,9 @@ We used ATMs to determine users' credit ratings and to recommend a banking syste
 
 ## 1. astro_base64.py
 ## 2. astro_secret.py
-## 3. linear_regression.py
+<hr>
+
+<h2><b>3. linear_regression.py</b></h2>
 <h3><b>1. Introduction</b></h3>
 Regression is a data analysis method in which the dependent variable Y is represented by the different variables X1,.., and Xp.
 The response variable is an explanatory variable, and the variables used for explanation are called independent variables.
@@ -41,30 +43,27 @@ Finally, when the user's amount and age are added to the function to make a dot 
 
 <h3><b>3. Example</b></h3>
 It is easy to control according to the procedure below.
-```Dankook_ATM/module/linear_regression.py
 
-    x_regressor = Read_value[x]
-    y_response = Read_value[y]
+```python
+x_regressor = Read_value[x]
+y_response = [int(Decoding(Read_value[key_y].iloc[i], Read_value[y].iloc[i]))
+                for i in range(len(Read_value.index))]
 
-    x_avg = np.mean(x_regressor)
-    y_avg = np.mean(y_response)
+x_avg = np.mean(x_regressor)
+y_avg = np.mean(y_response)
 
-    Sxx = np.sum((x_regressor-x_avg)**2)
-    Syy = np.sum((y_response-y_avg)**2)
+Sxx = np.sum((x_regressor-x_avg)**2)
+Syy = np.sum((y_response-y_avg)**2)
 
-    Sxy = np.sum((x_regressor-x_avg) * (y_response-y_avg))
+Sxy = np.sum((x_regressor-x_avg) * (y_response-y_avg))
 
-    m = Sxy/Sxx
-    b = y_avg - x_avg * m
+m = Sxy/Sxx
+b = y_avg - x_avg * m
 
-    if y_compare >= x_compare * m + b:
-        # print("High level income")
-        return 1
-    else:
-        # print("Low level income")
-        return 0
-```
-
+if y_compare >= x_compare * m + b:
+    return 1
+else:
+    return 0
 ```
 When I executed the code above,
 
@@ -79,9 +78,7 @@ Fourth, we derive the slope and the y-section using the partial differential equ
 The slope is Sxy / Sxx, and the y section is y_avg - (x_avg * m).
 
 Finally, when dotting (x_compare, y_compare) the coordinate plane, if above the straight line derived from the regression analysis, returns "high income level" and "low income level" if below the straight line.
-```
-
-
+<hr>
 <h2><b>4. LRUCache.py</b></h2>
 <h3><b>1. Introduction</b></h3>
 Cache memory is a high-speed semiconductor memory that is installed between CPU and main memory.

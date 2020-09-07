@@ -1,13 +1,15 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pylab as plt
+from module.astro_secret import *
 
 
-def linear_regression(Read_value, x, y, x_compare, y_compare):
+def linear_regression(Read_value, x, key_y, y, x_compare, y_compare):
 
     # .csv 파일을 읽어옴
     x_regressor = Read_value[x]
-    y_response = Read_value[y]
+    y_response = [int(Decoding(Read_value[key_y].iloc[i], Read_value[y].iloc[i]))
+                  for i in range(len(Read_value.index))]
 
     # x, y값의 평균
     x_avg = np.mean(x_regressor)
