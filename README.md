@@ -58,19 +58,26 @@ It is easy to control according to the procedure below.
     b = y_avg - x_avg * m
 
     if y_compare >= x_compare * m + b:
-        # print("당신의 소득 수준은 높습니다.")
+        # print("High level income")
         return 1
     else:
-        # print("당신의 소득 수준은 낮습니다.")
+        # print("Low level income")
         return 0
 ```
 When I executed the code above,
+
 First, In x_regressor variable, enter dependent variable values, and in y_response variable, enter response variable values.
+
 Second, for the x_avg variable, enter the mean of the x_regressor values, and for the y_avg variable, enter the mean of the y_response values.
+
 Third, because the sum of the squared deviations is the sum of the squared values after subtracting the mean from the value, the sum of the deviations of the x,y values for Sxy,the sum of the squares of the x deviations for Sxx, and the sum of the squares of the y deviations for Syy.
+
 Fourth, we derive the slope and the y-section using the partial differential equation.
+
 The slope is Sxy / Sxx, and the y section is y_avg - (x_avg * m).
+
 Finally, when dotting (x_compare, y_compare) the coordinate plane, if above the straight line derived from the regression analysis, returns "high income level" and "low income level" if below the straight line.
+
 
 
 <h2><b>4. LRUCache.py</b></h2>
