@@ -348,7 +348,7 @@ class SignUpForm(QWidget):
 
 
 class MainForm(QWidget):
-
+    def __init__(self):
         super().__init__()
         self.setWindowTitle("Astro - ATM")
         self.resize(180, 500)
