@@ -35,7 +35,7 @@ We used a customized encryption method to encrypt values that need to be decrypt
 3. Finalize encryption by re-encoding the added string. The encoding function then returns the key and encoding values together.
 
 ### 3. One-Way Encryption
-
+Passwords don't need to be decoded. That means you don't have to create a decryption key. Therefore, we implemented password encryption using One-Way Encryption (SHA-256).
 <hr>
 
 <h2><b>3. linear_regression.py</b></h2>
