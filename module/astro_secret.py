@@ -51,10 +51,6 @@ def PWEncoding(value):
     value = value.encode('utf-8')
     sha = hashlib.new('sha256')
     sha.update(value)
-    
-    value = sha.hexdigest()
-    value = value.encode('utf-8')
-    sha.update(value)
     return sha.hexdigest()
 
 
