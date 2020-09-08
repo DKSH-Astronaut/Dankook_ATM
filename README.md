@@ -24,6 +24,18 @@ We used ATMs to determine users' credit ratings and to recommend a banking syste
 
 ## 1. astro_base64.py
 ## 2. astro_secret.py
+
+### 1. Introduction
+Astro Secret operates based on base64. Due to the nature of two-way encryption, we added a specific string value to secure the disadvantage of longer encrypted strings. Also, we applied sha256, or one-way encryption, for passwords that do not require decryption.
+
+### 2. Two-Way Encryption
+We used a customized encryption method to encrypt values that need to be decrypted, such as names and balance information. Here's how it works:
+1. Encoding the entered string as base64.
+2. Add a random string to fit the position.
+3. Finalize encryption by re-encoding the added string. The encoding function then returns the key and encoding values together.
+
+### 3. One-Way Encryption
+
 <hr>
 
 <h2><b>3. linear_regression.py</b></h2>
